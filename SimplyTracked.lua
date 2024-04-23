@@ -29,7 +29,7 @@ local function SimplyTracked()
   local self = {}
   self.version = "0.1"
   self.name = "Simply Tracked"
-  self.author = "Omnyist Production"
+  self.author = "Omnyist Productions"
   self.description = "Simply tracks checkpoints reached in a given IronMON run."
   self.github = "omnypro/simply-tracked"
   self.url = string.format("https://github.com/%s", self.github or "")
