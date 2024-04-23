@@ -27,7 +27,7 @@
 
 local function SimplyTracked()
   local self = {}
-  self.version = "0.1"
+  self.version = "0.2"
   self.name = "Simply Tracked"
   self.author = "Omnyist Productions"
   self.description = "Simply tracks checkpoints reached in a given IronMON run."
@@ -58,7 +58,7 @@ local function SimplyTracked()
   -- https://github.com/WaffleSmacker/SmackerTracker-IronmonExtension/blob/main/SmackerTrackerFiles/SmackerTracker.lua
   local function pokemonInfoToTable(pokemon, labMon)
     local info = {}
-    if not PokemonData.isValid(pokemon.pokemonId) then
+    if not PokemonData.isValid(pokemon.pokemonID) then
       return info
     end
 
@@ -152,7 +152,7 @@ local function SimplyTracked()
   end
 
   local function outputStatsToFile(pokemon, labMon, filepath)
-    if not PokemonData.isValid(pokemon.pokemonId) then
+    if not PokemonData.isValid(pokemon.pokemonID) then
       return false
     end
 
@@ -202,8 +202,8 @@ local function SimplyTracked()
 
   function self.getHpPercent()
     local leadPokemon = Tracker.getPokemon(1, true) or Tracker.getDefaultPokemon()
-    if PokemonData.isValid(leadPokemon.pokemonId) then
-      local hpPercentage = (leadPokemon.curHp or 0) / (leadPokemon.stats.hp or 100)
+    if PokemonData.isValid(leadPokemon.pokemonID) then
+      local hpPercentage = (leadPokemon.curHP or 0) / (leadPokemon.stats.hp or 100)
       if hpPercentage >= 0 then
         return hpPercentage
       end
@@ -215,7 +215,7 @@ local function SimplyTracked()
     V.PokemonDead = false
     V.ShowInfo = false
     V.FirstPokemon = false
-    V.FirstPokemonId = false
+    V.FirstPokemonID = false
   end
 
   -- Executed only once: When the extension is enabled by the user, and/or when the Tracker first starts up, after it loads all other required files and code
@@ -238,7 +238,7 @@ local function SimplyTracked()
     local V = self.PerSeedVars
     local leadPokemon = Tracker.getPokemon(1, true) or Tracker.getDefaultPokemon()
     if isPlayingFRorE() and leadPokemon.pokemonID ~= nil and leadPokemon.pokemonID ~= 0 and not V.FirstPokemon then
-      V.FirstPokemonId = leadPokemon.pokemonID
+      V.FirstPokemonID = leadPokemon.pokemonID
       V.FirstPokemon = true
       local seedNumber = Main.currentSeed
       alreadyExists = valueExistsInFirstColumn(self.Paths.DataCsv, seedNumber)
@@ -249,24 +249,17 @@ local function SimplyTracked()
     -- Lead Pokemon Died
     if hpPercentage ~= nil and hpPercentage == 0 and V.PokemonDead == false and not alreadyExists then
       V.PokemonDead = true
-      outputStatsToFile(leadPokemon, V.FirstPokemonId, self.Paths.DataCsv)
-      local jsonString = csvToJsonString(self.Paths.DataCsv)
-      writeJsonData(jsonString)
+      outputStatsToFile(leadPokemon, V.FirstPokemonID, self.Paths.DataCsv)
     end
 
     -- Won Kaizo
     if
-      (Program.hasDefeatedTrainer(438) or Program.hasDefeatedTrainer(439) or Program.hasDefeatedTrainer(440) or
-        Program.hasDefeatedTrainer(739) or
-        Program.hasDefeatedTrainer(740) or
-        Program.hasDefeatedTrainer(741)) and
+      (Program.hasDefeatedTrainer(438) or Program.hasDefeatedTrainer(439) or Program.hasDefeatedTrainer(440)) and
         not V.WonKaizo and
         not alreadyExists
      then
       V.WonKaizo = true
-      outputStatsToFile(leadPokemon, V.FirstPokemonId, self.Paths.DataCsv)
-      local jsonString = csvToJsonString(self.Paths.DataCsv)
-      writeJsonData(jsonString)
+      outputStatsToFile(leadPokemon, V.FirstPokemonID, self.Paths.DataCsv)
     end
   end
 
