@@ -35,8 +35,8 @@ local function SimplyTracked()
   self.url = string.format("https://github.com/%s", self.github or "")
 
   self.FilesAndFolders = {
-    folder = "SimplyTracked",
-    file = "simply-tracked.csv"
+    ExtensionFolder = "SimplyTracked",
+    File = "simply-tracked.csv"
   }
   self.Paths = {
     DataCSV = ""
@@ -222,7 +222,7 @@ local function SimplyTracked()
   function self.startup()
     -- Build the path to the files within the extension's folder.
     local extFolderPath = FileManager.getCustomFolderPath() .. self.FilesAndFolders.ExtensionFolder .. FileManager.slash
-    self.Paths.DataCsv = extFolderPath .. self.FilesAndFolders.DataCSV
+    self.Paths.DataCsv = extFolderPath .. self.FilesAndFolders.File
   end
 
   -- Executed once every 30 frames, after most data from game memory is read in
