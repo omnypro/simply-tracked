@@ -11,31 +11,31 @@ local function SimplyTracked()
   -- HEADERS
 
   -- Checkpoints recorded in the CSV file:
-  ---- [id: 326, 327, 328]  Lab (Rival 1)
+  ---- [id: 326, 327, 328]  Rival 1 / Lab
   ---- [id: 102, 115]       First Trainer
-  ---- [id: 329, 330, 331]  Rival 2
+  ---- [id: 329, 330, 331]  Rival 2 / Route 22
   ---- [id: 414]            Brock
-  ---- [id: 332, 333, 334]  Rival 3
-  ---- [id: 426, 427, 428]  Rival 4
+  ---- [id: 332, 333, 334]  Rival 3 / Nugget Bridge
+  ---- [id: 426, 427, 428]  Rival 4 / St. Anne
   ---- [id: 415]            Misty
   ---- [id: 416]            Surge
-  ---- [id: 429, 430, 431]  Rival 5
+  ---- [id: 429, 430, 431]  Rival 5 / Pokemon Tower
   ---- [id: 348]            Rocket Hideout
   ---- [id: 417]            Erika
   ---- [id: 418]            Koga
-  ---- [id: 432, 433, 434]  Rival 6
+  ---- [id: 432, 433, 434]  Rival 6 / Silph Co.
   ---- [id: 349]            Silph Co.
   ---- [id: 420]            Sabrina
   ---- [id: 419]            Blaine
   ---- [id: 350]            Giovanni
-  ---- [id: 435, 436, 437]  Rival 7
+  ---- [id: 435, 436, 437]  Rival 7 / Route 22
   ---- [id: 410, 735]       Lorelai
   ---- [id: 411, 736]       Bruno
   ---- [id: 412, 737]       Agatha
   ---- [id: 413, 738]       Lance
   ---- [id: 438, 439, 440]  Champ  
   --------------------------------------
-  self.HEADERS = "Seed Number,Beat Lab,Beat First Trainer,Beat Rival 2,Beat Brock,Beat Misty,Beat Surge,Beat Erika,Beat Koga,Beat Sabrina,Beat Blaine,Beat Giovanni,Beat Lorelai,Beat Bruno,Beat Agatha,Beat Lance,Beat Champ"
+  self.HEADERS = "Seed Number,Beat Lab,Beat First Trainer,Beat Rival 2,Beat Brock,Beat Rival 3, Beat Rival 4,Beat Misty,Beat Surge,Beat Rival 5,Beat Rocket Hideout,Beat Erika,Beat Koga,Beat Rival 6,Beat Silph,Beat Sabrina,Beat Blaine,Beat Giovanni,Beat Rival 7,Beat Lorelai,Beat Bruno,Beat Agatha,Beat Lance,Beat Champ"
 
 	--------------------------------------
 	-- INTENRAL TRACKER FUNCTIONS BELOW
