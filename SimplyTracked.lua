@@ -29,13 +29,13 @@ local function SimplyTracked()
   local self = {}
   self.version = "0.2"
   self.name = "Simply Tracked"
-  self.author = "Omnyist Productions"
+  self.author = "Omnyist Production"
   self.description = "Simply tracks checkpoints reached in a given IronMON run."
   self.github = "omnypro/simply-tracked"
   self.url = string.format("https://github.com/%s", self.github or "")
 
   self.FilesAndFolders = {
-    ExtensionFolder = "SimplyTracked",
+    Folder = "SimplyTracked",
     File = "simply-tracked.csv"
   }
   self.Paths = {
@@ -57,6 +57,8 @@ local function SimplyTracked()
   -- Inspired by SmackerTracker's pokemonInfoToTable function.
   -- https://github.com/WaffleSmacker/SmackerTracker-IronmonExtension/blob/main/SmackerTrackerFiles/SmackerTracker.lua
   local function pokemonInfoToTable(pokemon, labMon)
+    print("pokemonInfoToTable")
+
     local info = {}
     if not PokemonData.isValid(pokemon.pokemonID) then
       return info
@@ -156,8 +158,11 @@ local function SimplyTracked()
       return false
     end
 
+    print("outputStatsToFile")
+
     -- Check if the file exists.
     local fileExists = io.open(filepath, "r")
+    print(filepath)
     if not fileExists then
       -- If the file does not exist, create it and write the headers.
       fileExists = io.open(filepath, "w")
@@ -200,29 +205,22 @@ local function SimplyTracked()
     return isUpdateAvailable, downloadUrl
   end
 
-  function self.getHpPercent()
-    local leadPokemon = Tracker.getPokemon(1, true) or Tracker.getDefaultPokemon()
-    if PokemonData.isValid(leadPokemon.pokemonID) then
-      local hpPercentage = (leadPokemon.curHP or 0) / (leadPokemon.stats.hp or 100)
-      if hpPercentage >= 0 then
-        return hpPercentage
-      end
-    end
-  end
+	function self.getHpPercent()
+		local leadPokemon = Tracker.getPokemon(1, true) or Tracker.getDefaultPokemon()
+		if PokemonData.isValid(leadPokemon.pokemonID) then
+			local hpPercentage = (leadPokemon.curHP or 0) / (leadPokemon.stats.hp or 100)
+			if hpPercentage >= 0 then
+				return hpPercentage
+			end
+		end
+	end
 
   function self.resetSeedVars()
     local V = self.PerSeedVars
     V.PokemonDead = false
-    V.ShowInfo = false
+    V.WonKaizo = false
     V.FirstPokemon = false
-    V.FirstPokemonID = false
-  end
-
-  -- Executed only once: When the extension is enabled by the user, and/or when the Tracker first starts up, after it loads all other required files and code
-  function self.startup()
-    -- Build the path to the files within the extension's folder.
-    local extFolderPath = FileManager.getCustomFolderPath() .. self.FilesAndFolders.ExtensionFolder .. FileManager.slash
-    self.Paths.DataCsv = extFolderPath .. self.FilesAndFolders.File
+    V.FirstPokemonId = ""
   end
 
   -- Executed once every 30 frames, after most data from game memory is read in
@@ -234,33 +232,39 @@ local function SimplyTracked()
       self.resetSeedVars()
       loadedVarsThisSeed = true
     end
-
     local V = self.PerSeedVars
     local leadPokemon = Tracker.getPokemon(1, true) or Tracker.getDefaultPokemon()
+    local alreadyExists = false
     if isPlayingFRorE() and leadPokemon.pokemonID ~= nil and leadPokemon.pokemonID ~= 0 and not V.FirstPokemon then
-      V.FirstPokemonID = leadPokemon.pokemonID
+      V.FirstPokemonId = leadPokemon.pokemonID
       V.FirstPokemon = true
       local seedNumber = Main.currentSeed
-      alreadyExists = valueExistsInFirstColumn(self.Paths.DataCsv, seedNumber)
+      alreadyExists = valueExistsInFirstColumn(self.Paths.DataCsv, tostring(seedNumber))
     end
-
+    -- Set up variable to use in the following checks.
     local hpPercentage = self.getHpPercent()
-
     -- Lead Pokemon Died
     if hpPercentage ~= nil and hpPercentage == 0 and V.PokemonDead == false and not alreadyExists then
+      print("Pokemon Died")
       V.PokemonDead = true
-      outputStatsToFile(leadPokemon, V.FirstPokemonID, self.Paths.DataCsv)
+      outputStatsToFile(leadPokemon, V.FirstPokemonId, self.Paths.DataCsv)
     end
-
-    -- Won Kaizo
     if
       (Program.hasDefeatedTrainer(438) or Program.hasDefeatedTrainer(439) or Program.hasDefeatedTrainer(440)) and
         not V.WonKaizo and
         not alreadyExists
      then
+      print("Won Kaizo")
       V.WonKaizo = true
-      outputStatsToFile(leadPokemon, V.FirstPokemonID, self.Paths.DataCsv)
+      outputStatsToFile(leadPokemon, V.FirstPokemonId, self.Paths.DataCsv)
     end
+  end
+
+  -- Executed only once: When the extension is enabled by the user, and/or when the Tracker first starts up, after it loads all other required files and code
+  function self.startup()
+    -- Build the path to the files within the extension's folder.
+    local extFolderPath = FileManager.getCustomFolderPath() .. self.FilesAndFolders.Folder .. FileManager.slash
+    self.Paths.DataCsv = extFolderPath .. self.FilesAndFolders.File
   end
 
   return self
